@@ -26,7 +26,7 @@ export class UserController {
       if (user) return user;
     }
 
-    return { message: 'Usuário não encontrado' };
+    return this.userService.findAll();
   }
 
   @Delete()
