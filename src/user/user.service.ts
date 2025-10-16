@@ -24,4 +24,12 @@ export class UserService {
   findByEmail(email: string): User | undefined {
     return this.users.find(u => u.email === email);
   }
+
+  deleteByEmail(email: string): boolean {
+    const index = this.users.findIndex(u => u.email === email);
+    if (index === -1) return false; // não encontrado
+
+    this.users.splice(index, 1);
+    return true; // removido com sucesso
+  }
 }

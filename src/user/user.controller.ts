@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { User, UserRequest } from './user.vo';
+import { Body, Controller, Get, Post, Query, Delete } from '@nestjs/common';
+import { UserRequest } from './user.vo';
 import { UserService } from './user.service';
 
 @Controller('usuario')
@@ -13,16 +13,29 @@ export class UserController {
 
   @Get()
   findByNameAndEmail(
-    @Query('name') name: string,
-    @Query('email') email: string,
+    @Query('name') name?: string,
+    @Query('email') email?: string,
   ) {
-    if (this.userService.findByName(name)) {
-        return this.userService.findByName(name);
+    if (name) {
+      const user = this.userService.findByName(name);
+      if (user) return user;
     }
 
-    if (this.userService.findByEmail(email)) {
-        return this.userService.findByEmail(email);
+    if (email) {
+      const user = this.userService.findByEmail(email);
+      if (user) return user;
     }
 
+    return { message: 'Usuário não encontrado' };
+  }
+
+  @Delete()
+  deleteByEmail(@Query('email') email: string) {
+    const deleted = this.userService.deleteByEmail(email);
+    if (!deleted) {
+      return { message: 'Usuário não encontrado' };
+    }
+
+    return { message: `Usuário com e-mail ${email} deletado com sucesso` };
   }
 }
